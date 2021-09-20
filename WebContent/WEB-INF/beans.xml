@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://cxf.apache.org/jaxrs
+    http://cxf.apache.org/schemas/jaxrs.xsd
+	http://cxf.apache.org/jaxws
+	http://cxf.apache.org/schemas/jaxws.xsd
+	http://cxf.apache.org/core
+	http://cxf.apache.org/schemas/core.xsd">
+
+	<bean id="logInBound" class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+	<bean id="logOutBound" class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<jaxws:endpoint id="VerifyTaxpayerDetailsService"
+		implementor="implementor.VerifyTaxpayerDetails" endpointName="s:VerifyTaxpayerDetailsServicePort"
+		serviceName="s:VerifyTaxpayerDetailsService" xmlns:s="http://iec.incometax.gov.in/ditsecws"
+		publishedEndpointUrl="http://localhost:8080/ITR/ditsecws/VerifyTaxpayerDetailsService"
+		address="/VerifyTaxpayerDetailsService"
+		wsdlLocation="D:/Divahar/Eclipse/ITR/VerifyTaxpayerDetailsService.wsdl">
+		<!-- 		 -->
+		<jaxws:inInterceptors>
+			<ref bean="logInBound" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="logOutBound" />
+		</jaxws:outInterceptors>
+			<jaxws:properties> 
+			<entry key="ws-security.callback-handler" value="common.EfilingPasswordCallback" />
+			<entry key="ws-security.signature.properties" value="serverKeystore.properties"/>
+			<entry key="ws-security.encryption.username" value="useReqSigCert" /> 
+			<entry key="ws-security.timestamp.futureTimeToLive" value="3000" /> 
+			<entry key="ws-security.timestamp.timestampStrict" value="true" />
+			<entry key="schema-validation-enabled" value="true" /> 
+			</jaxws:properties> 	
+	</jaxws:endpoint>
+</beans>
+

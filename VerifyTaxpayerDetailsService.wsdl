@@ -1,0 +1,127 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://iec.incometax.gov.in/ditsecws"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="VerifyTaxpayerDetailsService"
+	targetNamespace="http://iec.incometax.gov.in/ditsecws">
+	<wsdl:types>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://iec.incometax.gov.in/ditsecws/response"
+			elementFormDefault="qualified" targetNamespace="http://iec.incometax.gov.in/ditsecws/response" version="1.0">
+			<xs:element name="DitResponse" type="tns:DitResponse" />
+			<xs:element name="EvcThroughBankAccResponse" type="tns:EvcThroughBankAccResponse" />
+			<xs:complexType name="EvcThroughBankAccResponse">
+				<xs:complexContent>
+					<xs:extension base="tns:DitResponse">
+						<xs:sequence>
+							<xs:element minOccurs="0" name="nameBankAccnt" type="xs:string" />
+							<xs:element minOccurs="0" name="panBankAccntLinkageFlag" type="xs:string" />
+							<xs:element minOccurs="0" name="mobileVerFlag" type="xs:string" />
+							<xs:element minOccurs="0" name="emailVerFalg" type="xs:string" />
+							<xs:element minOccurs="0" name="accountStatus" type="xs:string" />
+							<xs:element minOccurs="0" name="accountType" type="xs:string" />
+						</xs:sequence>
+					</xs:extension>
+				</xs:complexContent>
+			</xs:complexType>
+			<xs:complexType name="DitResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="ErrorCode" type="xs:string" />
+					<xs:element minOccurs="0" name="ErrorDesc" type="xs:string" />
+				</xs:sequence>
+				<xs:attribute name="uniqueRequestId" type="xs:string"
+					use="required" />
+			</xs:complexType>
+		</xs:schema>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://iec.incometax.gov.in/ditsecws/request"
+			elementFormDefault="qualified" targetNamespace="http://iec.incometax.gov.in/ditsecws/request" 
+			 version="1.0">			
+			<xs:element name="EvcThroughBankAccRequest" type="tns:EvcThroughBankAccRequest" />
+			<xs:complexType name="EvcThroughBankAccRequest">
+				<xs:sequence>
+					<xs:element name="PAN" minOccurs="1">
+						<xsd:simpleType>
+							<xsd:restriction base="xs:string">
+								<xsd:length value="10" />
+								<xsd:pattern value="[A-Za-z][A-Za-z][A-Za-z][JjLlBbTtAaCcFfHhPpGg][A-Za-z]\d\d\d\d[A-Za-z]" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xs:element>
+					<xs:element name="Name" type="xs:string" />
+					<xs:element name="BankAccountNumber" type="xs:string" />
+					 <xs:element  minOccurs="1" name="IFSC" >
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:length value="11" />
+								<xs:pattern value="[A-Za-z]{4}(0)[a-zA-Z0-9]{6}" />
+							</xs:restriction>
+						</xs:simpleType>
+					 </xs:element>
+					  <xs:element  minOccurs="1" name="MobileNumber" >
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:length value="10" />
+								<xs:pattern value="[987]{1}[0-9]{9}" />
+							</xs:restriction>
+						</xs:simpleType>
+					 </xs:element>	
+					 <xs:element  minOccurs="1" name="EmailId" type="xs:string" />
+				</xs:sequence>
+				<xs:attribute name="uniqueRequestId" use="required">
+					<xsd:simpleType>
+						<xsd:restriction base="xs:string">
+							<xsd:pattern value="[A-Za-z0-9]{10}[/-][A-Za-z0-9]{4,29}" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xs:attribute>
+			</xs:complexType>
+		</xs:schema>
+		<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://iec.incometax.gov.in/ditsecws" xmlns:ns2="http://iec.incometax.gov.in/ditsecws/response"
+			xmlns:ns1="http://iec.incometax.gov.in/ditsecws/request" attributeFormDefault="unqualified" elementFormDefault="qualified"
+			targetNamespace="http://iec.incometax.gov.in/ditsecws">
+			<xs:import namespace="http://iec.incometax.gov.in/ditsecws/request" />
+			<xs:import namespace="http://iec.incometax.gov.in/ditsecws/response" />
+			<xs:element name="verifyTaxpayerDetails" type="tns:verifyTaxpayerDetails" />
+			<xs:element name="verifyTaxpayerDetailsResponse" type="tns:verifyTaxpayerDetailsResponse" />
+			<xs:complexType name="verifyTaxpayerDetails">
+				<xs:sequence>
+					<xs:element minOccurs="1" name="DitRequest" type="ns1:EvcThroughBankAccRequest" />
+				</xs:sequence>
+			</xs:complexType>
+			<xs:complexType name="verifyTaxpayerDetailsResponse">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="DitResponse" type="ns2:EvcThroughBankAccResponse" />
+				</xs:sequence>
+			</xs:complexType>
+		</xs:schema>
+	</wsdl:types>
+	<wsdl:message name="verifyTaxpayerDetails">
+		<wsdl:part element="tns:verifyTaxpayerDetails" name="parameters"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="verifyTaxpayerDetailsResponse">
+		<wsdl:part element="tns:verifyTaxpayerDetailsResponse" name="parameters"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="VerifyTaxpayerDetailsService">
+		<wsdl:operation name="verifyTaxpayerDetails">
+			<wsdl:input message="tns:verifyTaxpayerDetails" name="verifyTaxpayerDetails"></wsdl:input>
+			<wsdl:output message="tns:verifyTaxpayerDetailsResponse"	name="verifyTaxpayerDetailsResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="VerifyTaxpayerDetailsServiceSoapBinding"	type="tns:VerifyTaxpayerDetailsService">
+		<soap:binding style="document"	transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#EfilingWsSecPolicy" />
+		<wsdl:operation name="verifyTaxpayerDetails">
+			<soap:operation soapAction="" style="document" />
+			<wsdl:input name="verifyTaxpayerDetails">
+				<soap:body use="literal" />
+				<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#EfilingPartsPolicy" />
+			</wsdl:input>
+			<wsdl:output name="verifyTaxpayerDetailsResponse">
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="VerifyTaxpayerDetailsService">
+		<wsdl:port binding="tns:VerifyTaxpayerDetailsServiceSoapBinding"
+			name="VerifyTaxpayerDetailsServicePort">
+			<soap:address location="http://localhost:8080/ITR/ditsecws/VerifyTaxpayerDetailsService"/>
+		</wsdl:port>
+	</wsdl:service>
+	<wsdl:import location="EfilingWsSecPolicy.wsdl" namespace="http://iec.incometax.gov.in/ditsecws"/>
+</wsdl:definitions>
